@@ -22,10 +22,10 @@ export const ApiProviderContextRoot = (): IApiProvider => {
     () => async (url: string, method: string, data?: any) => {
       const endpointUrl = apiDetails.apiUrl + url;
       const response = await fetch(
-        endpointUrl +
-          (endpointUrl.includes('?')
-            ? '&api-version=2016-11-01'
-            : '?api-version=2016-11-01'),
+        endpointUrl,
+          // (endpointUrl.includes('?')
+          //   ? '&api-version=2016-11-01'
+          //   : '?api-version=2016-11-01'),
         {
           method: method,
           body: data ? JSON.stringify(data) : undefined,

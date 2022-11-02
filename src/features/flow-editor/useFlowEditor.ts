@@ -56,7 +56,8 @@ export const useFlowEditor = () => {
           if (envId && flowId) {
             try {
               setIsLoading(true);
-              const flow = await api.get(`${getFlowUrl(envId, flowId)}`);
+
+              const flow = await api.get(`${getFlowUrl(envId, flowId)}?api-version=2016-11-01&$expand=tags`);
               setData({
                 definition: JSON.stringify(flow.properties.definition, null, 2),
                 name: flow.properties.displayName,
@@ -79,7 +80,9 @@ export const useFlowEditor = () => {
       let retVal: string | null = null;
       try {
         setIsLoading(true);
-        const response = await api.patch(`${getFlowUrl(envId, flowId)}`, {
+        //   https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/{env}/flows/{flowId}?api-version=2016-11-01&$expand=swagger,properties.connectionreferences.apidefinition,properties.definitionSummary.operations.apiOperation
+
+        const response = await api.patch(`${getFlowUrl(envId, flowId)}?api-version=2016-11-01&$expand=swagger,properties.connectionreferences.apidefinition,properties.definitionSummary.operations.apiOperation`, {
           properties: {
             definition: JSON.parse(definition),
           },
@@ -101,7 +104,7 @@ export const useFlowEditor = () => {
       try {
         setIsLoading(true);
         const errors: FlowError[] = await api.post(
-          `${getFlowUrl(envId, flowId)}/checkFlowErrors`,
+          `${getFlowUrl(envId, flowId)}/checkFlowErrors?api-version=2016-11-01`,
           {
             properties: {
               definition: JSON.parse(definition),
@@ -110,7 +113,7 @@ export const useFlowEditor = () => {
         );
 
         const warnings: FlowError[] = await api.post(
-          `${getFlowUrl(envId, flowId)}/checkFlowWarnings`,
+          `${getFlowUrl(envId, flowId)}/checkFlowWarnings?api-version=2016-11-01`,
           {
             properties: {
               definition: JSON.parse(definition),
